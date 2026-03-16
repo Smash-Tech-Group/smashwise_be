@@ -49,6 +49,9 @@ origins = [
     "http://localhost:5174",
 ]
 
+if settings.FRONTEND_URL and settings.FRONTEND_URL not in origins:
+    origins.append(settings.FRONTEND_URL)
+
 
 # In-memory request counter by endpoint and IP address
 request_counter = defaultdict(lambda: defaultdict(int))

@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from api.utils.config import SECRET_KEY, ALGORITHM
 from api.db.database import get_db
-from api.v1.models.users import User
+from api.v1.models.user import User
 
 
 # Security scheme for Bearer token

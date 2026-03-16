@@ -4,6 +4,8 @@ from sqlalchemy import pool
 from alembic import context
 from decouple import config as decouple_config
 from api.v1.models import *
+from api.v1.models.user import User
+from api.v1.models.cart import Cart, CartItem
 from api.db.database import Base
 
 # this is the Alembic Config object, which provides

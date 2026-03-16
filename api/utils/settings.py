@@ -70,6 +70,7 @@ class Settings(BaseSettings):
         Path(__file__).resolve().parent.parent.parent, "tmp", "media"
     )
     FRONTEND_MAGICLINK_URL: str = config("FRONTEND_MAGICLINK_URL")
+    FRONTEND_URL: str = config("FRONTEND_URL", default="")
 
     @property
     def ACTIVATE_TOOL_TRACKING(self) -> bool:
