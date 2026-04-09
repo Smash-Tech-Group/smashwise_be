@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan, title="FastAPI Boilerplate", version="1.0.0")
+app = FastAPI(lifespan=lifespan, title="Smashwise_be", version="1.0.0")
 
 
 MEDIA_DIR = "./media"
