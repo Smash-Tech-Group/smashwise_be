@@ -2,7 +2,11 @@
 api/v1/schemas/product.py
 
 Pydantic schemas for Product, ProductImage, and ProductReview endpoints.
+Extended to include review submission schema (ReviewSubmit) with
+order_line_item_id, title, and media_urls fields.
 """
+
+# File: api/v1/schemas/product.py
 
 from pydantic import BaseModel, Field
 from typing import Optional, List, Any
@@ -23,23 +27,47 @@ class ProductImageOut(BaseModel):
 # ── Product Review ─────────────────────────────────────────────
 
 class ReviewCreate(BaseModel):
+    """Legacy schema — used by existing POST /products/{id}/reviews route."""
     rating:  int = Field(..., ge=1, le=5)
     comment: Optional[str] = None
 
     model_config = {"str_strip_whitespace": True}
 
 
+class ReviewSubmit(BaseModel):
+    """
+    Schema for the new POST /api/v1/reviews endpoint.
+    Tied to a specific order line item for deduplication.
+    """
+    order_line_item_id: str
+    product_id:         str
+    rating:             int = Field(..., ge=1, le=5)
+    title:              str = Field(..., min_length=1, max_length=300)
+    body:               Optional[str] = None
+    reviewer_name:      str = Field(..., min_length=1, max_length=200)
+    media_urls:         Optional[List[str]] = []
+
+    model_config = {"str_strip_whitespace": True}
+
+
 class ReviewOut(BaseModel):
-    id:            str
-    product_id:    str
-    user_id:       Optional[str]
-    reviewer_name: str
-    rating:        int
-    comment:       Optional[str]
-    verified:      bool
-    created_at:    datetime
+    id:                 str
+    product_id:         str
+    user_id:            Optional[str]
+    order_line_item_id: Optional[str]
+    reviewer_name:      str
+    title:              str
+    rating:             int
+    comment:            Optional[str]
+    media_urls:         Optional[List[str]]
+    verified:           bool
+    created_at:         datetime
 
     model_config = {"from_attributes": True}
+
+
+class CanReviewOut(BaseModel):
+    can_review: bool
 
 
 # ── Rating Breakdown ───────────────────────────────────────────
@@ -68,7 +96,7 @@ class ProductCreate(BaseModel):
     sizes:          Optional[list] = None
     colors:         Optional[list] = None
     delivery_info:  Optional[dict] = None
-    images:         Optional[List[str]] = None  # list of image URLs
+    images:         Optional[List[str]] = None
 
     model_config = {"str_strip_whitespace": True}
 
@@ -125,6 +153,6 @@ class ProductListOut(BaseModel):
     review_count: int
     category:     Optional[str]
     vendor:       Optional[str]
-    image:        Optional[str] = None   # first image URL
+    image:        Optional[str] = None
 
     model_config = {"from_attributes": True}
