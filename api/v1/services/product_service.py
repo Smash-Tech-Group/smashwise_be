@@ -72,6 +72,7 @@ class ProductService(Service):
             product_id=product_id,
             user_id=user.id,
             reviewer_name=user.full_name or user.username,
+            title=data.comment[:100] if data.comment else f"{data.rating}-star review",  # fallback title for legacy endpoint
             rating=data.rating,
             comment=data.comment,
             verified=True,
@@ -308,12 +309,12 @@ class ProductService(Service):
 
         # Seed reviews for the first product
         mock_reviews = [
-            {"reviewer_name": "John Nwadike",    "rating": 5, "comment": "Great value for money",    "verified": True},
-            {"reviewer_name": "Sarah M.",         "rating": 5, "comment": "Love the quality and performance. Highly recommended!", "verified": True},
-            {"reviewer_name": "Tunde Balogun",   "rating": 4, "comment": "Very nice sneakers, came well packaged.", "verified": True},
-            {"reviewer_name": "Amaka O.",         "rating": 4, "comment": "Bought this for my boyfriend and he absolutely loves it.", "verified": True},
-            {"reviewer_name": "Chukwuemeka D.",  "rating": 3, "comment": "Decent shoe for the price. Runs slightly small.", "verified": True},
-            {"reviewer_name": "Fatima A.",        "rating": 5, "comment": "Exceeded my expectations! The design is gorgeous.", "verified": True},
+            {"reviewer_name": "John Nwadike",   "title": "Great value for money",          "rating": 5, "comment": "Great value for money",                                       "verified": True},
+            {"reviewer_name": "Sarah M.",        "title": "Highly recommended!",            "rating": 5, "comment": "Love the quality and performance. Highly recommended!",        "verified": True},
+            {"reviewer_name": "Tunde Balogun",  "title": "Well packaged and nice",         "rating": 4, "comment": "Very nice sneakers, came well packaged.",                      "verified": True},
+            {"reviewer_name": "Amaka O.",        "title": "Perfect gift",                   "rating": 4, "comment": "Bought this for my boyfriend and he absolutely loves it.",     "verified": True},
+            {"reviewer_name": "Chukwuemeka D.", "title": "Good but runs small",            "rating": 3, "comment": "Decent shoe for the price. Runs slightly small.",              "verified": True},
+            {"reviewer_name": "Fatima A.",       "title": "Exceeded my expectations!",      "rating": 5, "comment": "Exceeded my expectations! The design is gorgeous.",           "verified": True},
         ]
         for mr in mock_reviews:
             review = ProductReview(product_id=created[0].id, **mr)
