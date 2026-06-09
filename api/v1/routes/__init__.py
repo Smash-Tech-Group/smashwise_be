@@ -14,6 +14,7 @@ from api.v1.routes.payment_route  import payment
 from api.v1.routes.profile_route  import profile
 from api.v1.routes.product_route  import product
 from api.v1.routes.wishlist_route import wishlist
+from api.v1.routes.review_route   import review
 
 api_version_one = APIRouter(prefix="/api/v1")
 
@@ -25,3 +26,4 @@ api_version_one.include_router(payment)
 api_version_one.include_router(profile)
 api_version_one.include_router(product)
 api_version_one.include_router(wishlist)
+api_version_one.include_router(review)
