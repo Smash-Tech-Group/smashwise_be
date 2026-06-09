@@ -10,10 +10,12 @@ Key design decisions:
   - status transitions are validated in order_service.py, not at the DB level.
 
 Status lifecycle:
-    pending → processing → completed
+    pending → processing → completed → delivered
     pending → cancelled
     processing → cancelled
 """
+
+# File: api/v1/models/order.py
 
 from sqlalchemy import Column, String, Integer, ForeignKey, Numeric
 from sqlalchemy.orm import relationship
@@ -21,14 +23,15 @@ from sqlalchemy.orm import relationship
 from api.v1.models.base_model import BaseTableModel
 
 # Valid status values
-ORDER_STATUSES = {"pending", "processing", "completed", "cancelled"}
+ORDER_STATUSES = {"pending", "processing", "completed", "cancelled", "delivered"}
 
 # Allowed transitions  {from_status: {allowed_to_statuses}}
 ORDER_TRANSITIONS: dict[str, set[str]] = {
     "pending":    {"processing", "cancelled"},
     "processing": {"completed", "cancelled"},
-    "completed":  set(),          # terminal — no further transitions
-    "cancelled":  set(),          # terminal — no further transitions
+    "completed":  {"delivered"},          # completed → delivered
+    "cancelled":  set(),                  # terminal — no further transitions
+    "delivered":  set(),                  # terminal — no further transitions
 }
 
 
@@ -63,4 +66,5 @@ class OrderItem(BaseTableModel):
     quantity      = Column(Integer,       nullable=False)
     subtotal      = Column(Numeric(10, 2), nullable=False)   # unit_price × quantity
 
-    order = relationship("Order", back_populates="items")
+    order  = relationship("Order", back_populates="items")
+    review = relationship("ProductReview", back_populates="order_item", uselist=False)

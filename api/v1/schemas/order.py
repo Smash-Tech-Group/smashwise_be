@@ -19,7 +19,7 @@ class CheckoutRequest(BaseModel):
 
 class OrderStatusUpdate(BaseModel):
     """Body sent to PATCH /orders/{order_id}/status"""
-    status: str = Field(..., pattern="^(processing|completed|cancelled)$")
+    status: str = Field(..., pattern="^(processing|completed|cancelled|delivered)$")
 
 
 class PromoApplyRequest(BaseModel):
